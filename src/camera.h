@@ -1,12 +1,21 @@
 #include "arducam_mipicamera.h"
 
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc.hpp>
+
+#include <stdio.h>
+#include <string.h>
+
 class Camera{
     public:
         int init();
         int set_mode(uint8_t mode);
-        int capture(uint32_t exptime);
+        cv::Mat *capture(uint32_t exptime);
         int close();
     protected:
         CAMERA_INSTANCE camera_instance;
-        IMAGE_FORMAT fmt = {IMAGE_ENCODING_PNG, 80};
+        int width = 1600;
+        int height = 1300;
+        IMAGE_FORMAT fmt = {IMAGE_ENCODING_JPEG, 80};
 };

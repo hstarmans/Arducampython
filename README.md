@@ -1,7 +1,8 @@
 # ArducamPython
 
 Python wrapper for Arducam library. The official library provided by Arducam does not work.
-Therefore I had to write a new libary. Library has not been tested
+A known error is that cam.set_mode(0) results in a Can't open file.
+This is as the lens shading cannot be found, however lens shading is not needed in my case.
 
 ## Installation
 ```
@@ -12,3 +13,4 @@ sudo apt -y install cmake
 ```
 cmake -H. -Bbuild & make -C ./build
 ```
+Errors can be damangled with https://demangler.com/

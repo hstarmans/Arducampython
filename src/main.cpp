@@ -1,12 +1,19 @@
 #include <pybind11/pybind11.h>
+#include <pybind11/stl.h>
+
 #include "arducam_mipicamera.h"
+
+#include "ndarray_converter.h"
+
 #include "camera.h"
 
 namespace py = pybind11;
 
 PYBIND11_MODULE(camera, m) {
+    NDArrayConverter::init_numpy();
     m.doc() = "Python camera wrapper for Arducam";
-    py::class_<Camera>(m, "Camera")
+    py::class_<Camera>(m, "Cam")
+        .def(py::init<>())
         .def("init", &Camera::init)
         .def("close", &Camera::close)
         .def("capture", &Camera::capture, "Capture image with given exposure time and return buffer", py::arg("exptime"))
