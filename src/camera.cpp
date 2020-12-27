@@ -1,23 +1,23 @@
 #include "camera.h"
 
-int Camera::init():
+int Camera::init()
 {
-    return arducam_init_camera(&CAMERA_INSTANCE);
+    return arducam_init_camera(&camera_instance);
 }
 
-int Camera::set_mode(uint8_t mode):
+int Camera::set_mode(uint8_t mode)
 {
-    return arducam_set_mode(&CAMERA_INSTANCE, mode)
+    return arducam_set_mode(&camera_instance, mode);
 }
 
-int Camera::close():
+int Camera::close()
 {
-    return arducam_close_camera(&CAMERA_INSTANCE);
+    return arducam_close_camera(&camera_instance);
 }
 
-int Camera::capture(uint32_t exptime):
+int Camera::capture(uint32_t exptime)
 {
-    BUFFER *buffer = arducam_capture(&CAMERA_INSTANCE, &fmt, exptime);
+    BUFFER *buffer = arducam_capture(&camera_instance, &fmt, exptime);
     return 0;
 }
 // you need to release the buffer!?

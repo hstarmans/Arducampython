@@ -14,6 +14,6 @@ include_directories(src)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 # build the python module
-add_subdirectory(${PROJECT_SOURCE_DIR}/pybind11/)
+add_subdirectory(${PROJECT_SOURCE_DIR}/src/pybind11/)
 
 pybind11_add_module(camera ${PROJECT_SOURCE_DIR}/src/main.cpp ${LIB_SOURCES})
