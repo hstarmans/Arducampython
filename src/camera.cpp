@@ -26,14 +26,15 @@ cv::Mat *Camera::capture(uint32_t exptime)
     LOG("Disable Software Auto White Balance...");
     arducam_software_auto_white_balance(camera_instance, 0);
     BUFFER *buffer = arducam_capture(camera_instance, &fmt, exptime);
-    if (!buffer) 
-       LOG("Capture returns nullpointer!!");
+    if (!buffer) {
+        LOG("Capture returns nullpointer!!");
        return NULL;
+    }
     // The actual width and height of the IMAGE_ENCODING_RAW_BAYER format and the IMAGE_ENCODING_I420 format are aligned, 
     // width 32 bytes aligned, and height 16 byte aligned.
-    //int width_new = VCOS_ALIGN_UP(width, 32);
-    //int height_new = VCOS_ALIGN_UP(height, 16);
-    cv::Mat *image = new cv::Mat(cv::Size(width, height), CV_8UC1, buffer->data);
+    int width_new = VCOS_ALIGN_UP(width, 32);
+    int height_new = VCOS_ALIGN_UP(height, 16);
+    cv::Mat *image = new cv::Mat(cv::Size(width_new, height_new*1.5), CV_8UC1, buffer->data);
     arducam_release_buffer(buffer);
     return image;
 }

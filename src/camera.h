@@ -17,5 +17,5 @@ class Camera{
         CAMERA_INSTANCE camera_instance;
         int width = 1600;
         int height = 1300;
-        IMAGE_FORMAT fmt = {IMAGE_ENCODING_JPEG, 80};
+        IMAGE_FORMAT fmt = {IMAGE_ENCODING_I420, 80};
 };
