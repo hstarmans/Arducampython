@@ -14,6 +14,7 @@ class Camera{
         cv::Mat *capture(uint32_t exptime);
         int close();
     protected:
+        // settings for sensor OV2311
         CAMERA_INSTANCE camera_instance;
         int width = 1600;
         int height = 1300;
