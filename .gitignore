@@ -18,3 +18,5 @@ _generate/
 *.so
 *.py[cod]
 *.egg-info
+*.jpg
+*.swp
