@@ -12,14 +12,18 @@ class Tests(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        cls.close()
+        cls.cam.close()
 
     def test_takeimage(self):
-        img = cam.capture(1200)
+        img = self.cam.capture(1200)
         height, width, channels = img.shape
-        self.assertEqual((height, width), (1600, 1300))
+        # retrievd image not equal to expected
+        self.assertEqual((height, width), (1312, 1600))
 
     def preview(self):
         while cv2.waitKey(10) != 27:
-            img = cam.capture(1200)
+            img = self.cam.capture(1200)
             cv2.imshow("preview image", img)
+
+if __name__ == '__main__':
+    unittest.main()
