@@ -1,4 +1,6 @@
 import unittest
+from time import time, sleep
+
 
 import cv2
 
@@ -14,16 +16,34 @@ class Tests(unittest.TestCase):
     def tearDownClass(cls):
         cls.cam.close()
 
-    def test_takeimage(self):
+    def test_takeimage(self, save=False):
         img = self.cam.capture(1200)
         height, width, channels = img.shape
         # retrievd image not equal to expected
         self.assertEqual((height, width), (1312, 1600))
+        if save: cv2.imwrite('test.png', img)
+
+    def testspeed(self):
+        tstart = time()
+        loops = 30
+        for _ in range(loops):
+            img = self.cam.capture(100)
+        print(f"Capturing {loops/(time()-tstart):.2f} frames per second")
+
+
+    def pythonpreview(self):
+        input("This method does not work!")
+        while cv2.waitKey(30) != 27: # 27 is ascii value of esc
+            #img = self.cam.capture(3000)
+            img = cv2.imread('test.png')
+            if img.shape[0] == 0:
+                continue
+            cv2.imshow("preview image", img)
+            sleep(0.1)
+            del img
 
     def preview(self):
-        while cv2.waitKey(10) != 27:
-            img = self.cam.capture(1200)
-            cv2.imshow("preview image", img)
+        self.cam.live_view(3000)
 
 if __name__ == '__main__':
     unittest.main()

@@ -33,7 +33,8 @@ cv::Mat *Camera::capture(uint32_t exptime)
 {
     BUFFER *buffer = arducam_capture(camera_instance, &fmt, exptime);
     if (!buffer) {
-        LOG("Capture returns nullpointer!!");
+       LOG("Capture returns nullpointer!!");
+       arducam_release_buffer(buffer);
        return NULL;
     }
     int width_new = VCOS_ALIGN_UP(width, 32);
@@ -42,4 +43,17 @@ cv::Mat *Camera::capture(uint32_t exptime)
     cv::cvtColor(*image, *image, cv::COLOR_YUV2BGR_I420);
     arducam_release_buffer(buffer);
     return image;
+}
+
+void Camera::live_view(uint32_t exptime)
+{
+    while(1){
+        cv::Mat *image = capture(exptime);
+        if(!image)
+            continue;
+        cv::imshow("Arducam", *image);
+        if(cv::waitKey(30)==27)
+            break;
+        delete image;
+    }
 }
