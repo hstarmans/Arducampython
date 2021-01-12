@@ -47,7 +47,7 @@ cv::Mat *Camera::capture(uint32_t exptime)
 cv::Mat *Camera::pythoncapture(uint32_t exptime)
 {
     // data is sent over to python, you need to explicitly clear it
-    // if cpature is called directly; this results in a memory leak 
+    // if capture is called directly; this results in a memory leak 
     if(pyimage != NULL){delete pyimage;}
     pyimage = capture(exptime);
     return  pyimage;
