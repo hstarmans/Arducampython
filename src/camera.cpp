@@ -34,7 +34,6 @@ cv::Mat *Camera::capture(uint32_t exptime)
     BUFFER *buffer = arducam_capture(camera_instance, &fmt, exptime);
     if (!buffer) {
        LOG("Capture returns nullpointer!!");
-       arducam_release_buffer(buffer);
        return NULL;
     }
     int width_new = VCOS_ALIGN_UP(width, 32);
@@ -45,15 +44,22 @@ cv::Mat *Camera::capture(uint32_t exptime)
     return image;
 }
 
+cv::Mat *Camera::pythoncapture(uint32_t exptime)
+{
+    // data is sent over to python, you need to explicitly clear it
+    // if cpature is called directly; this results in a memory leak 
+    if(pyimage != NULL){delete pyimage;}
+    pyimage = capture(exptime);
+    return  pyimage;
+}
+
 void Camera::live_view(uint32_t exptime)
 {
     while(1){
-        cv::Mat *image = capture(exptime);
-        if(!image)
-            continue;
-        cv::imshow("Arducam", *image);
-        if(cv::waitKey(30)==27)
-            break;
-        delete image;
+	cv::Mat *image = capture(exptime);
+    if(!image) continue;
+    cv::imshow("Arducam", *image);
+    if(cv::waitKey(30)==27) break;
+	delete image;
     }
 }

@@ -32,15 +32,14 @@ class Tests(unittest.TestCase):
 
 
     def pythonpreview(self):
-        input("This method does not work!")
         while cv2.waitKey(30) != 27: # 27 is ascii value of esc
-            #img = self.cam.capture(3000)
-            img = cv2.imread('test.png')
-            if img.shape[0] == 0:
+            img = self.cam.capture(3000)
+            try:
+                if img.shape[0] == 0:
+                    continue
+            except AttributeError:
                 continue
             cv2.imshow("preview image", img)
-            sleep(0.1)
-            del img
 
     def preview(self):
         self.cam.live_view(3000)

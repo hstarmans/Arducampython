@@ -12,11 +12,13 @@ class Camera{
         int init();
         int set_mode(uint8_t mode);
         cv::Mat *capture(uint32_t exptime);
+        cv::Mat *pythoncapture(uint32_t exptime);
         void live_view(uint32_t exptime);
         int close();
     protected:
         // settings for sensor OV2311
         CAMERA_INSTANCE camera_instance;
+        cv::Mat *pyimage;
         int width = 1600;
         int height = 1300;
         IMAGE_FORMAT fmt = {IMAGE_ENCODING_I420, 80};
