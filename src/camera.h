@@ -11,11 +11,15 @@ class Camera{
     public:
         int init();
         int set_mode(uint8_t mode);
+        int get_exposure();
+        int set_exposure(int newexposuretime);
+        int set_auto_white_balance(bool enable);
         int set_resolution(int width, int height);
-        cv::Mat capture(uint32_t exptime);
-        void live_view(uint32_t exptime, float scale);
+        cv::Mat capture();
+        void live_view(float scale);
         int close();
     protected:
+        int exposuretime = 3000;
         int width = 1600;
         int height = 1300;
         // settings for sensor OV2311

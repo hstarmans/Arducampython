@@ -1,4 +1,5 @@
 #include "camera.h"
+#include <linux/v4l2-controls.h>
 
 #define LOG(fmt, args...) fprintf(stderr, fmt "\n", ##args)
 #define VCOS_ALIGN_DOWN(p,n) (((ptrdiff_t)(p)) & ~((n)-1))
@@ -18,9 +19,25 @@ int Camera::init()
     return 0;
 }
 
+int Camera::set_auto_white_balance(bool enable){
+    return arducam_software_auto_white_balance(camera_instance, enable);
+}
+
 int Camera::set_mode(uint8_t mode)
 {
-    return arducam_set_mode(camera_instance, 0);
+    return arducam_set_mode(camera_instance, mode);
+}
+
+int Camera::set_exposure(int newexposuretime)
+{
+    exposuretime = newexposuretime;
+    return arducam_set_control(camera_instance, V4L2_CID_EXPOSURE, newexposuretime);
+}
+
+int Camera::get_exposure()
+{
+    arducam_get_control(camera_instance, V4L2_CID_EXPOSURE, &exposuretime);
+    return exposuretime;
 }
 
 int Camera::set_resolution(int newwidth, int newheight){
@@ -34,10 +51,10 @@ int Camera::close()
     return arducam_close_camera(camera_instance);
 }
 
-cv::Mat Camera::capture(uint32_t exptime)
+cv::Mat Camera::capture()
 {
     cv::Mat image;
-    BUFFER *buffer = arducam_capture(camera_instance, &fmt, exptime);
+    BUFFER *buffer = arducam_capture(camera_instance, &fmt, exposuretime);
     if (!buffer) {
        LOG("Capture returns nullpointer!!");
        return image; 
@@ -53,10 +70,10 @@ cv::Mat Camera::capture(uint32_t exptime)
     return crop;
 }
 
-void Camera::live_view(uint32_t exptime, float scale = 1.0)
+void Camera::live_view(float scale = 1.0)
 {
     while(1){
-        cv::Mat image = capture(exptime);
+        cv::Mat image = capture();
         if(image.empty()) continue;
         cv::resize(image, image, cv::Size(), scale, scale);
         cv::imshow("Arducam", image);
