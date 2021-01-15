@@ -8,8 +8,7 @@ int Camera::init()
 {
     int res = arducam_init_camera(&camera_instance);
     if(!res){
-        LOG("Can't connect to camera");
-        return -1;
+        LOG("Something wrong with connect, camera might still function");
     }
     arducam_set_mode(camera_instance, 0);
     LOG("Disable Software Auto Exposure...");
@@ -24,42 +23,43 @@ int Camera::set_mode(uint8_t mode)
     return arducam_set_mode(camera_instance, 0);
 }
 
+int Camera::set_resolution(int newwidth, int newheight){
+    LOG("This function does not work yet");
+    width, height = newwidth, newheight;
+    return arducam_set_resolution(camera_instance, &newwidth, &newheight);
+}
+
 int Camera::close()
 {
     return arducam_close_camera(camera_instance);
 }
 
-cv::Mat *Camera::capture(uint32_t exptime)
+cv::Mat Camera::capture(uint32_t exptime)
 {
+    cv::Mat image;
     BUFFER *buffer = arducam_capture(camera_instance, &fmt, exptime);
     if (!buffer) {
        LOG("Capture returns nullpointer!!");
-       return NULL;
+       return image; 
     }
     int width_new = VCOS_ALIGN_UP(width, 32);
     int height_new = VCOS_ALIGN_UP(height, 16);
-    cv::Mat *image = new cv::Mat(cv::Size(width_new, height_new*1.5), CV_8UC1, buffer->data);
-    cv::cvtColor(*image, *image, cv::COLOR_YUV2BGR_I420);
+    image = cv::Mat(cv::Size(width_new, height_new*1.5), CV_8UC1, buffer->data);
+    cv::cvtColor(image, image, cv::COLOR_YUV2BGR_I420);
+    // arducam produces incorrect image and part of it needs to be cropped
+    cv::Rect roi(0, 0, width, (height-20));
+    cv::Mat crop = image(roi);
     arducam_release_buffer(buffer);
-    return image;
+    return crop;
 }
 
-cv::Mat *Camera::pythoncapture(uint32_t exptime)
-{
-    // data is sent over to python, you need to explicitly clear it
-    // if capture is called directly; this results in a memory leak 
-    if(pyimage != NULL){delete pyimage;}
-    pyimage = capture(exptime);
-    return  pyimage;
-}
-
-void Camera::live_view(uint32_t exptime)
+void Camera::live_view(uint32_t exptime, float scale = 1.0)
 {
     while(1){
-	cv::Mat *image = capture(exptime);
-    if(!image) continue;
-    cv::imshow("Arducam", *image);
-    if(cv::waitKey(30)==27) break;
-	delete image;
+        cv::Mat image = capture(exptime);
+        if(image.empty()) continue;
+        cv::resize(image, image, cv::Size(), scale, scale);
+        cv::imshow("Arducam", image);
+        if(cv::waitKey(30)==27) break;
     }
 }
