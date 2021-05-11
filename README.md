@@ -16,7 +16,9 @@ This specific error is due to lens shading which cannot be found.
 ## Installation
 Install requirements;
 ```
-pip3 install pybind
+git clone --recurse-submodules git@github.com:hstarmans/Arducampython.git
+sudo apt install i2c-tools
+sudo apt-get install python3-pybind11
 sudo apt -y install cmake
 ```
 Install [Arducam python](https://github.com/ArduCAM/MIPI_Camera) and try ./capture.  If there is a kernel failure, fix [wiringpi](https://github.com/ArduCAM/MIPI_Camera/issues/82), and run the i2cdetect script in utils.
@@ -27,6 +29,16 @@ Run the test
 ```
 python3 test/test.py
 ```
+## 64 bit
+Camera can be detected on 64 bit but does not work. This was tested with latest 64 bit binary.
+You need to install
+```
+https://github.com/RPi-Distro/raspi-gpio
+```
+Vchiq fails and can only be fixed by setting permissions.
+A usefull blog is [site](https://zengliyang.wordpress.com/2021/01/04/raspberry-pi-4b-ubuntu-20-04-camera/).
+Best would be to try reproduce above with classical camera.
+
 ## Compile Notes
 ```
 cmake -H. -Bbuild & make -C ./build
