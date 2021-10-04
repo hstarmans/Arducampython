@@ -17,23 +17,26 @@ class Tests(unittest.TestCase):
         cls.cam.close()
 
     def test_takeimage(self, save=False):
-        img = self.cam.capture(1200)
+        self.cam.set_exposure(1200)
+        img = self.cam.capture()
         height, width, channels = img.shape
         # retrievd image not equal to expected
-        self.assertEqual((height, width), (1312, 1600))
+        self.assertEqual((height, width), (1280, 1600))
         if save: cv2.imwrite('test.png', img)
 
     def testspeed(self):
         tstart = time()
         loops = 30
+        self.cam.set_exposure(100)
         for _ in range(loops):
-            img = self.cam.capture(100)
+            img = self.cam.capture()
         print(f"Capturing {loops/(time()-tstart):.2f} frames per second")
 
 
     def pythonpreview(self):
         while cv2.waitKey(30) != 27: # 27 is ascii value of esc
-            img = self.cam.capture(3000)
+            self.cam.set_exposure(3000)
+            img = self.cam.capture()
             try:
                 if img.shape[0] == 0:
                     continue
