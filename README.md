@@ -1,6 +1,7 @@
 # ArducamPython
 
-Python wrapper for Arducam library. 
+Python wrapper for Arducam UC-621. Only works with this camera on linux distro bullseye. Arducam has newer version with the same chip 
+which uses a more recent version based on libcam.
 Tested at commit hash for both raspberry pi 4 and 3B. 
 ```
 commit 7f75cf1e0f870ba9eb567d71c5e09702b8a9f395 (HEAD -> master, origin/master, origin/HEAD)
@@ -27,11 +28,10 @@ python3 setup.py install --user
 ```
 Run the test
 ```
-python3 test/test.py
+python3 test/test.py Tests.pythonpreview
 ```
 ## 64 bit
-Camera can be detected on 64 bit but does not work. This was tested with latest 64 bit binary.
-You need to install
+Camere works with 64 bit binary, you have to look in subfolders of https://github.com/ArduCAM/MIPI_Camera for this.
 ```
 https://github.com/RPi-Distro/raspi-gpio
 ```

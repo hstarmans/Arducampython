@@ -45,7 +45,7 @@ class Tests(unittest.TestCase):
             cv2.imshow("preview image", img)
 
     def preview(self):
-        self.cam.live_view(3000, 0.6)
+        self.cam.live_view(0.6)
 
 if __name__ == '__main__':
     unittest.main()
